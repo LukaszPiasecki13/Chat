@@ -1,0 +1,7 @@
+*.cpython-312.pyc
+*sqlite3
+__pycache__/
+
+
+.vscode/launch.json
+.vscode/settings.json
