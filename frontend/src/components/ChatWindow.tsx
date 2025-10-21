@@ -7,6 +7,8 @@ import {
   ListItem,
   Typography,
   Paper,
+  Avatar,
+  Divider,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import * as api from "../services/api";
@@ -76,14 +78,22 @@ export function ChatWindow({ currentUser, receiver }: ChatWindowProps) {
   };
 
   return (
-    <>
-      <Paper
-        elevation={3}
-        sx={{ flexGrow: 1, overflow: "auto", p: 2, bgcolor: "grey.100" }}
-      >
+    <Paper
+      square
+      elevation={0}
+      sx={{ height: "100%", display: "flex", flexDirection: "column", bgcolor: "grey.50" }}
+    >
+      <Box sx={{ p: 2, display: "flex", alignItems: "center", gap: 2 }}>
+        <Avatar sx={{ bgcolor: "secondary.main" }}>
+          {receiver.username.charAt(0).toUpperCase()}
+        </Avatar>
+        <Typography variant="h6">{receiver.username}</Typography>
+      </Box>
+      <Divider />
+
+      <Box sx={{ flexGrow: 1, overflow: "auto", p: 2 }}>
         <List>
           {messages.map((msg, index) => {
-            console.log("Rendering message:", msg, currentUser);
             const isMyMessage = msg.sender === currentUser.id;
             return (
               <ListItem
@@ -91,33 +101,30 @@ export function ChatWindow({ currentUser, receiver }: ChatWindowProps) {
                 sx={{
                   display: "flex",
                   justifyContent: isMyMessage ? "flex-end" : "flex-start",
+                  p: 0.5,
                 }}
               >
-                <Box
-                  sx={{
-                    maxWidth: "75%",
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
+                <Box sx={{ maxWidth: "75%", display: "flex", flexDirection: "column" }}>
                   <Typography
                     variant="caption"
                     sx={{
                       alignSelf: isMyMessage ? "flex-end" : "flex-start",
                       color: "text.secondary",
+                      mx: 1,
                     }}
                   >
                     {isMyMessage ? "You" : `User ${msg.sender}`}
                   </Typography>
+
                   <Paper
-                    elevation={1}
+                    elevation={2}
                     sx={{
                       p: 1.5,
-                      borderRadius: 3,
-                      borderTopLeftRadius: isMyMessage ? 3 : 0,
-                      borderTopRightRadius: isMyMessage ? 0 : 3,
+                      borderRadius: 4,
+                      borderTopLeftRadius: isMyMessage ? 16 : 0,
+                      borderTopRightRadius: isMyMessage ? 0 : 16,
                       bgcolor: msg.isError
-                        ? "error.main" 
+                        ? "error.main"
                         : isMyMessage
                         ? "primary.main"
                         : "background.paper",
@@ -128,21 +135,22 @@ export function ChatWindow({ currentUser, receiver }: ChatWindowProps) {
                         : "text.primary",
                     }}
                   >
-                    
                     <Typography variant="body1">{msg.content}</Typography>
                   </Paper>
+
                   <Typography
                     variant="caption"
                     sx={{
                       alignSelf: isMyMessage ? "flex-end" : "flex-start",
                       color: "text.secondary",
                       mt: 0.5,
+                      mx: 1,
                     }}
                   >
-                  {new Date(msg.timestamp ?? '').toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
+                    {new Date(msg.timestamp ?? "").toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
                   </Typography>
                 </Box>
               </ListItem>
@@ -150,14 +158,17 @@ export function ChatWindow({ currentUser, receiver }: ChatWindowProps) {
           })}
           <div ref={chatEndRef} />
         </List>
-      </Paper>
+      </Box>
+
+      <Divider />
+
       <Box
         component="form"
         onSubmit={(e) => {
           e.preventDefault();
           handleSendMessage();
         }}
-        sx={{ display: "flex", alignItems: "center", mt: 2 }}
+        sx={{ display: "flex", alignItems: "center", p: 2 }}
       >
         <TextField
           fullWidth
@@ -166,17 +177,21 @@ export function ChatWindow({ currentUser, receiver }: ChatWindowProps) {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyPress={handleKeyPress}
-          sx={{ mr: 1 }}
+          sx={{
+            mr: 1,
+            "& .MuiOutlinedInput-root": { borderRadius: "20px" },
+          }}
         />
         <Button
           type="submit"
           variant="contained"
           endIcon={<SendIcon />}
           disabled={!inputValue.trim()}
+          sx={{ borderRadius: "20px", px: 3 }}
         >
           Send
         </Button>
       </Box>
-    </>
+    </Paper>
   );
 }

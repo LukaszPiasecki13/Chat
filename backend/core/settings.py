@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-4cn)qjfo17b@f$al=%03knc2r&!l5-*7i0k5u2)-flg(vn!_&h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+
 
 
 # Application definition
@@ -129,23 +129,35 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # nowa linia
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://localhost",
-    "http://localhost:80",
-    "http://127.0.0.1",
-]
 CORS_ALLOWED_ORIGINS = [
+    "http://localhost",
+    "http://localhost:80",
     "http://localhost:5173",
+    "http://127.0.0.1",
+    "http://127.0.0.1:80",
     "http://127.0.0.1:5173",
+    "http://frontend",
+    "http://frontend:80",
+    "http://backend:8000",
+    # Allow all local origins for Docker development
+    "http://0.0.0.0:80",
+    "http://0.0.0.0:8000"
+]
+
+CSRF_TRUSTED_ORIGINS = [
     "http://localhost",
     "http://localhost:80",
     "http://127.0.0.1",
+    "http://127.0.0.1:80",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://frontend",
+    "http://frontend:80",
+    "http://backend:8000"
 ]
-
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "backend", "frontend", "*"]
 CORS_ALLOW_CREDENTIALS = True
-
+CORS_ALLOW_ALL_ORIGINS = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
@@ -158,7 +170,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
+            "hosts": [("redis", 6379)],
         },
     },
 }

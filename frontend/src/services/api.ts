@@ -2,7 +2,10 @@ import axios from "axios";
 import type { User, Message } from "../types";
 
 const apiClient = axios.create({
-  baseURL: "http://localhost:8000/",
+  // baseURL: "http://127.0.0.1:8000/",
+  // baseURL: "http://backend:8000/",
+  // Use relative URLs - nginx will proxy to backend
+  baseURL: "/",
   
 });
 
@@ -58,7 +61,8 @@ export const connectWebSocket = (
   roomName: string,
   onMessage: (message: Message) => void
 ) => {
-  const socket = new WebSocket(`ws://127.0.0.1:8000/ws/chat/${roomName}/`);
+  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const socket = new WebSocket(`${protocol}//${window.location.host}/ws/chat/${roomName}/`);
 
   socket.onopen = () => console.log("WebSocket connected");
   socket.onmessage = (event) => {
